@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  app:
+    build: ./docker/php
+    container_name: tg_app
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+
+  scheduler:
+    build: ./docker/php
+    container_name: tg_scheduler
+    working_dir: /var/www/html
+    command: sh -c "while true; do php /var/www/html/cron.php; sleep 60; done"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+
+  web:
+    build: ./docker/nginx
+    container_name: tg_web
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - app
+
+  db:
+    image: mariadb:10.6
+    container_name: tg_db
+    environment:
+      MYSQL_DATABASE: tg_reminder
+      MYSQL_USER: tg_user
+      MYSQL_PASSWORD: tg_password
+      MYSQL_ROOT_PASSWORD: root
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

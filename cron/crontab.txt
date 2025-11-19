@@ -1,0 +1,1 @@
+* * * * * php /var/www/html/src/Worker/ReminderWorker.php >> /var/www/html/logs/worker.log 2>&1
