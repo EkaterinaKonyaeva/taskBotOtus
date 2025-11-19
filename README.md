@@ -55,40 +55,6 @@ cd tg_reminder_bot
 
 ---
 
-## 3. Создай базу и таблицы
-
-```sql
-CREATE DATABASE IF NOT EXISTS tg_reminder
-  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-USE tg_reminder;
-
-CREATE TABLE IF NOT EXISTS users (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    telegram_id BIGINT UNSIGNED NOT NULL UNIQUE,
-    username VARCHAR(255),
-    first_name VARCHAR(255),
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS tasks (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNSIGNED NOT NULL,
-    kind ENUM('task','habit') NOT NULL DEFAULT 'task',
-    title VARCHAR(255) NOT NULL,
-    schedule_type ENUM('daily','weekly','custom') NOT NULL,
-    time_of_day TIME NOT NULL,
-    weekday TINYINT NULL,
-    custom_interval_minutes INT NULL,
-    next_run_at DATETIME NOT NULL,
-    is_active TINYINT(1) NOT NULL DEFAULT 1,
-    last_completed_at DATETIME NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-```
-
----
 
 ## 4. Nginx конфигурация
 
